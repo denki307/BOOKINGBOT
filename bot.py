@@ -24,7 +24,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
         [InlineKeyboardButton(text="SEO 🔍", callback_data="svc_SEO")],
         [InlineKeyboardButton(text="Logo Designing 🎨", callback_data="svc_Logo Designing")],
         [InlineKeyboardButton(text="Video Editing 🎬", callback_data="svc_Video Editing")],
-        [InlineKeyboardButton(text="Digital Marketing 📈", callback_data="svc_Digital Marketing")]
+        [InlineKeyboardButton(text="Digital Marketing 📈", callback_data="svc_Digital Marketing")],
         [InlineKeyboardButton(text="Content Create 🎥", callback_data="svc_Content Create")]
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard=kb)
