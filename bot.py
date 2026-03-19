@@ -8,12 +8,13 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQu
 
 # --- CONFIGURATION ---
 TOKEN = os.getenv("BOT_TOKEN")
-OWNER_ID = int(os.getenv("OWNER_ID", "8516457288")) # Your ID as default
+OWNER_ID = int(os.getenv("OWNER_ID", "8516457288"))
 
-# --- YOUR LINKS ---
+# --- LINKS & ASSETS ---
+START_IMAGE = "https://graph.org/file/eb34c7fe13246dbe38ff4-2a6c67002ce93021ce.jpg"
 SUPPORT_LINK = "https://t.me/TheBrandNetwork_Official"
 CHANNEL_LINK = "https://t.me/BrandNetwork_DM"
-OWNER_LINK = "tg://user?id=8516457288" # Direct DM link using your ID
+OWNER_LINK = "tg://user?id=8516457288"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -25,7 +26,6 @@ class Booking(StatesGroup):
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
-    # Main Service Buttons
     kb = [
         [
             InlineKeyboardButton(text="SEO 🔍", callback_data="svc_SEO"),
@@ -35,9 +35,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
             InlineKeyboardButton(text="Video Editing 🎬", callback_data="svc_Video Editing"),
             InlineKeyboardButton(text="Digital Marketing 📈", callback_data="svc_Digital Marketing")
         ],
-        [InlineKeyboardButton(text="Content Create 🎥", callback_data="svc_Content Create")],
-        
-        # --- SUPPORT, CHANNEL, OWNER BUTTONS ---
+        [InlineKeyboardButton(text="Content Creation 🎥", callback_data="svc_Content Creation")],
         [
             InlineKeyboardButton(text="Owner 👑", url=OWNER_LINK),
             InlineKeyboardButton(text="Support 🛠️", url=SUPPORT_LINK)
@@ -46,8 +44,14 @@ async def cmd_start(message: types.Message, state: FSMContext):
     ]
     reply_markup = InlineKeyboardMarkup(inline_keyboard=kb)
     
-    await message.reply(
-        "👋 **Welcome to Brand Network!**\n\nNamba services moolama unga brand-ah reach panna vaikalam. Entha service venum nu select pannunga:",
+    # Sending Image with Caption
+    await message.answer_photo(
+        photo=START_IMAGE,
+        caption=(
+            "👋 **Welcome to Brand Network!**\n\n"
+            "We help you scale your brand with professional services. "
+            "Please select a service below to start your booking:"
+        ),
         reply_markup=reply_markup
     )
     await state.set_state(Booking.choosing_service)
@@ -57,15 +61,17 @@ async def service_selected(callback: CallbackQuery, state: FSMContext):
     service = callback.data.split("_")[1]
     await state.update_data(selected_service=service)
     
-    await callback.message.edit_text(
-        f"✅ Selected: **{service}**\n\nIppo unga **Full Name**-ah send pannunga:"
+    # Using delete and send new message or editing caption
+    await callback.message.delete()
+    await callback.message.answer(
+        f"✅ Selected Service: **{service}**\n\nPlease enter your **Full Name**:"
     )
     await state.set_state(Booking.waiting_for_name)
 
 @dp.message(Booking.waiting_for_name)
 async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(user_name=message.text)
-    await message.reply("Super! Ippo unga **Phone Number**-ah kudunga:")
+    await message.reply("Great! Now please provide your **Phone Number**:")
     await state.set_state(Booking.waiting_for_phone)
 
 @dp.message(Booking.waiting_for_phone)
@@ -76,10 +82,11 @@ async def process_phone(message: types.Message, state: FSMContext):
     name = user_data.get('user_name')
     username = f"@{message.from_user.username}" if message.from_user.username else "No Username"
 
-    # User Confirmation
-    await message.reply("🚀 **Booking Request Sent!**\nNamba team ungala seekiram contact pannuvanga. Thanks!")
+    await message.reply(
+        "🚀 **Booking Request Sent Successfully!**\n\n"
+        "Our team will contact you shortly. Thank you for choosing **Brand Network**!"
+    )
 
-    # OWNER-KU DM LOG
     if OWNER_ID != 0:
         log_text = (
             "🔥 **NEW BOOKING ALERT!**\n"
@@ -94,12 +101,12 @@ async def process_phone(message: types.Message, state: FSMContext):
         try:
             await bot.send_message(OWNER_ID, log_text)
         except Exception as e:
-            print(f"Error sending log: {e}")
+            print(f"Log Error: {e}")
             
     await state.clear()
 
 async def main():
-    print("🚀 Brand Network Bot is Live!")
+    print("🚀 Brand Network Bot is live with Image Support!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
