@@ -1,25 +1,27 @@
 {
-  "name": "Brand Network Booking Bot",
-  "description": "Telegram bot for service booking and admin logging.",
+  "name": "Brand Network Bot",
+  "description": "Telegram Service Booking Bot",
+  "keywords": ["python", "telegram", "aiogram"],
   "repository": "https://github.com/yourusername/your-repo-name",
-  "logo": "https://raw.githubusercontent.com/yourusername/your-repo-name/main/logo.png",
-  "keywords": ["telegram", "bot", "aiogram", "booking"],
   "env": {
     "BOT_TOKEN": {
-      "description": "BotFather kitta irunthu vangu tha Bot Token-ah inga kodu.",
+      "description": "Enter your Telegram Bot Token from @BotFather",
       "required": true
     },
     "OWNER_ID": {
-      "description": "Unga Telegram Chat ID (Use @userinfobot to find it).",
+      "description": "Enter your Telegram User ID from @userinfobot",
       "required": true
     }
   },
-  "stack": "container",
   "formation": {
     "worker": {
       "quantity": 1,
       "size": "eco"
     }
-  }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
 }
-
