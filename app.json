@@ -1,0 +1,25 @@
+{
+  "name": "Brand Network Booking Bot",
+  "description": "Telegram bot for service booking and admin logging.",
+  "repository": "https://github.com/yourusername/your-repo-name",
+  "logo": "https://raw.githubusercontent.com/yourusername/your-repo-name/main/logo.png",
+  "keywords": ["telegram", "bot", "aiogram", "booking"],
+  "env": {
+    "BOT_TOKEN": {
+      "description": "BotFather kitta irunthu vangu tha Bot Token-ah inga kodu.",
+      "required": true
+    },
+    "OWNER_ID": {
+      "description": "Unga Telegram Chat ID (Use @userinfobot to find it).",
+      "required": true
+    }
+  },
+  "stack": "container",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  }
+}
+
